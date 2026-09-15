@@ -1,0 +1,265 @@
+/* ==========================================================================
+   1. RESET E VARIÁVEIS GLOBAIS
+   ========================================================================== */
+   :root {
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --bg-body: #f1f5f9;
+    --bg-card: #ffffff;
+    --bg-fieldset: #f8fafc;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --border-color: #cbd5e1;
+    --radius: 8px;
+  }
+  
+  /* Suporte automático a Dark Mode */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-body: #0f172a;
+      --bg-card: #1e293b;
+      --bg-fieldset: #0f172a;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+    }
+  }
+  
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* ==========================================================================
+     2. CABEÇALHO (HEADER)
+     ========================================================================== */
+  header {
+    background-color: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  header a {
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  header > a {
+    font-size: 1.2rem;
+    color: var(--primary);
+  }
+  
+  header nav a {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+  
+  header nav a:hover {
+    color: var(--primary);
+  }
+  
+  /* ==========================================================================
+     3. CONTEÚDO PRINCIPAL (MAIN / SECTION)
+     ========================================================================== */
+  main {
+    max-width: 750px;
+    width: 90%;
+    margin: 2rem auto;
+    flex: 1;
+  }
+  
+  section {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    font-size: 1.6rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  section > p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* ==========================================================================
+     4. FORMULÁRIO E CAMPOS
+     ========================================================================== */
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  fieldset {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    background-color: var(--bg-fieldset);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  legend {
+    padding: 0 0.5rem;
+    font-weight: bold;
+    color: var(--primary);
+  }
+  
+  /* Container de cada campo */
+  fieldset > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  
+  label {
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+  
+  input[type="text"],
+  input[type="number"],
+  select {
+    width: 100%;
+    padding: 0.65rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-card);
+    color: var(--text-main);
+    font-size: 0.95rem;
+  }
+  
+  input:focus,
+  select:focus {
+    outline: 2px solid var(--primary);
+    border-color: transparent;
+  }
+  
+  /* Estilo para Opções de Risco (Radio Group) */
+  .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.3rem;
+  }
+  
+  .radio-group label {
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+  }
+  
+  input[type="radio"] {
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+  }
+  
+  /* ==========================================================================
+     5. BOTÕES E COMPONENTES
+     ========================================================================== */
+  button[type="submit"],
+  .btn-action {
+    background-color: var(--primary);
+    color: #ffffff;
+    border: none;
+    padding: 0.85rem 1.25rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: var(--radius);
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.2s;
+  }
+  
+  button[type="submit"]:hover,
+  .btn-action:hover {
+    background-color: var(--primary-hover);
+  }
+  
+  /* Cards da tela de detalhamento */
+  .grid-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .card {
+    background-color: var(--bg-fieldset);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--primary);
+    padding: 1rem;
+    border-radius: 4px;
+  }
+  
+  .card h4 {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+  
+  .card p {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-top: 0.25rem;
+  }
+  
+  /* Tabela da tela de detalhamento */
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 1rem;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+  
+  table th, table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  table th {
+    background-color: var(--bg-fieldset);
+    color: var(--text-muted);
+  }
+  
+  /* ==========================================================================
+     6. RODAPÉ (FOOTER)
+     ========================================================================== */
+  footer {
+    text-align: center;
+    padding: 1.5rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: auto;
+  }

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Life-Branch | Nova Simulação</title>
+  <link rel="stylesheet" href="formulario_da_sumilacao.css">
+</head>
+<body>
+
+  <header>
+    <a href="index.html">💰 Life-Branch</a>
+    <nav>
+      <a href="index.html">← Cancelar e Voltar ao Painel</a>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h1>Configurar Nova Simulação</h1>
+      <p>Preencha os dados abaixo para rodar o algoritmo de projeção de vida.</p>
+
+      <form id="form-simulacao" action="detalhamento.html" method="GET">
+
+        <!-- ETAPA 1 -->
+        <fieldset>
+          <legend>Etapa 1: Seu Perfil Atual</legend>
+
+          <div>
+            <label for="nome-projeto">Nome desta simulação:</label>
+            <input type="text" id="nome-projeto" name="nome-projeto" placeholder="Ex: Transição para TI vs. Cargo Atual" required>
+          </div>
+
+          <div>
+            <label for="idade">Idade Atual:</label>
+            <input type="number" id="idade" name="idade" min="18" max="100" placeholder="Ex: 25" required>
+          </div>
+
+          <div>
+            <label for="cidade-atual">Cidade Onde Mora Atualmente:</label>
+            <input type="text" id="cidade-atual" name="cidade-atual" placeholder="Ex: São Paulo - SP" required>
+          </div>
+
+          <div>
+            <label for="renda-atual">Renda Mensal Líquida (R$):</label>
+            <input type="number" id="renda-atual" name="renda-atual" step="100" placeholder="Ex: 3500" required>
+          </div>
+
+          <div>
+            <label for="reserva">Reserva de Emergência Guardada (R$):</label>
+            <input type="number" id="reserva" name="reserva" step="500" placeholder="Ex: 10000" required>
+          </div>
+        </fieldset>
+
+        <!-- ETAPA 2 -->
+        <fieldset>
+          <legend>Etapa 2: O Novo Cenário (Hipótese)</legend>
+
+          <div>
+            <label for="tipo-mudanca">Tipo de Mudança Pretendida:</label>
+            <select id="tipo-mudanca" name="tipo-mudanca" required>
+              <option value="">-- Selecione uma opção --</option>
+              <option value="carreira">Transição de Carreira / Nova Profissão</option>
+              <option value="cidade">Mudança de Cidade / Estado</option>
+              <option value="ambos">Mudança de Cidade + Transição de Carreira</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="cidade-destino">Cidade de Destino (se for mudar):</label>
+            <input type="text" id="cidade-destino" name="cidade-destino" placeholder="Ex: Florianópolis - SC">
+          </div>
+
+          <div>
+            <label for="nova-renda">Estimativa de Renda no Novo Cenário (R$):</label>
+            <input type="number" id="nova-renda" name="nova-renda" step="100" placeholder="Ex: 4500">
+          </div>
+
+          <div>
+            <label for="custo-transicao">Custo Inicial de Transição/Mudança (R$):</label>
+            <input type="number" id="custo-transicao" name="custo-transicao" step="500" placeholder="Ex: 5000">
+          </div>
+        </fieldset>
+
+        <!-- ETAPA 3 -->
+        <fieldset>
+          <legend>Etapa 3: Parâmetros da Simulação</legend>
+
+          <div>
+            <label for="prazo">Prazo de Projeção no Tempo:</label>
+            <select id="prazo" name="prazo" required>
+              <option value="3">3 anos</option>
+              <option value="5" selected>5 anos</option>
+              <option value="10">10 anos</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Sua Tolerância a Risco Financeiro:</label>
+            <div class="radio-group">
+              <label for="risco-baixo">
+                <input type="radio" id="risco-baixo" name="risco" value="conservador" checked>
+                Conservador (Prefiro mais estabilidade)
+              </label>
+
+              <label for="risco-medio">
+                <input type="radio" id="risco-medio" name="risco" value="moderado">
+                Moderado
+              </label>
+
+              <label for="risco-alto">
+                <input type="radio" id="risco-alto" name="risco" value="arrojado">
+                Arrojado (Aceito oscilações por maior ganho)
+              </label>
+            </div>
+          </div>
+        </fieldset>
+
+        <button type="submit" id="btn-submit">🚀 Gerar Projeção de Vida</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Senai-cetaf. Projeto Acadêmico de Desenvolvimento Web.</p>
+  </footer>
+
+  <script>
+    // Lógica para capturar os dados do formulário, guardar para a tela final
+    // e redirecionar para tela_final.html (onde o cálculo é exibido)
+    document.getElementById('form-simulacao').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const form = event.target;
+      const formData = new FormData(form);
+
+      // Transforma os dados do formulário em um objeto simples
+      const dados = {};
+      formData.forEach((valor, chave) => {
+        dados[chave] = valor;
+      });
+
+      // Guarda os dados no localStorage para a tela_final.html poder ler
+      localStorage.setItem('lifebranch_dados', JSON.stringify(dados));
+
+      const btn = document.getElementById('btn-submit');
+      btn.disabled = true;
+      btn.style.opacity = '0.8';
+      btn.textContent = '⏳ Processando Algoritmo...';
+
+      setTimeout(() => {
+        window.location.href = 'tela_final.html';
+      }, 1200);
+    });
+  </script>
+
+</body>
+</html>

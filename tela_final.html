@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Life-Branch | Detalhamento dos Cálculos</title>
+  <link rel="stylesheet" href="formulario_da_simulacao.css">
+  <link rel="stylesheet" href="tela_final.css">
+  <!-- Chart.js para renderização interativa do gráfico -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <header>
+    <a href="index.html">💰 Life-Branch</a>
+    <nav>
+      <a href="formulario_da_simulaçao.html">← Refazer Simulação</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Resumo Executivo -->
+    <section id="resumo-executivo">
+      <h1>Detalhamento Matemático e Financeiro</h1>
+      <p><strong>Projeto:</strong> <span id="nome-projeto-out">Transição para TI vs. Cargo Atual</span> &nbsp;|&nbsp; <strong>Status:</strong> <span class="badge">Processado com Sucesso</span></p>
+
+      <div class="grid-cards">
+        <div class="card">
+          <h4>Investimento de Transição</h4>
+          <p id="card-investimento">R$ 5.000,00</p>
+        </div>
+        <div class="card">
+          <h4>Ponto de Equilíbrio (Breakeven)</h4>
+          <p id="card-breakeven">Mês 14</p>
+        </div>
+        <div class="card">
+          <h4>Ganho Líquido Adicional</h4>
+          <p id="card-ganho">R$ 132.000,00</p>
+        </div>
+        <div class="card">
+          <h4>Patrimônio Final Projetado</h4>
+          <p id="card-patrimonio">R$ 62.500,00</p>
+        </div>
+      </div>
+    </section>
+
+    <br>
+
+    <!-- Gráfico Comparativo -->
+    <section id="grafico-projecao">
+      <h2 id="titulo-grafico">Evolução Patrimonial Acumulada (5 Anos)</h2>
+      <div style="position: relative; width: 100%; margin-top: 1.5rem;">
+        <canvas id="graficoPatrimonio"></canvas>
+      </div>
+    </section>
+
+    <br>
+
+    <!-- Tabela Temporal -->
+    <section id="tabela-temporal">
+      <h2 id="titulo-tabela">Projeção Ano a Ano (Cenário B - Nova Carreira em TI)</h2>
+      
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Período</th>
+              <th>Renda Mensal</th>
+              <th>Custo de Vida</th>
+              <th>Sobra Mensal</th>
+              <th>Acumulado Anual</th>
+              <th>Reserva / Patrimônio</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-corpo">
+            <!-- Linhas geradas dinamicamente via JavaScript -->
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-muted);"><small>* Descontados custos extras, impostos e reajustes de inflação ao longo do período.</small></p>
+    </section>
+
+    <br>
+
+    <!-- Ações do Usuário -->
+    <section id="acoes" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+      <a href="formulario_da_simulaçao.html" class="btn-action" style="background-color: var(--text-muted);">📋 Refazer Simulação</a>
+      <button type="button" class="btn-action" onclick="window.print()">🖨️ Imprimir Detalhamento</button>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Senai-cetaf. Projeto Acadêmico de Desenvolvimento Web.</p>
+  </footer>
+
+  <script>
+    // ---------------------------------------------------------------
+    // 1) LER OS DADOS ENVIADOS PELO FORMULÁRIO (formulario_da_simulaçao.html)
+    //    Eles foram salvos no localStorage sob a chave 'lifebranch_dados'.
+    //    Se a pessoa abrir esta tela direto (sem preencher o formulário),
+    //    usamos valores de exemplo como fallback.
+    // ---------------------------------------------------------------
+    const dadosSalvos = localStorage.getItem('lifebranch_dados');
+    const dados = dadosSalvos ? JSON.parse(dadosSalvos) : {
+      'nome-projeto': 'Transição para TI vs. Cargo Atual',
+      'idade': '25',
+      'renda-atual': '3500',
+      'reserva': '10000',
+      'tipo-mudanca': 'carreira',
+      'nova-renda': '4500',
+      'custo-transicao': '5000',
+      'prazo': '5',
+      'risco': 'conservador'
+    };
+
+    // ---------------------------------------------------------------
+    // 2) MOTOR DE SIMULAÇÃO
+    //    Cenário A = manter a situação atual
+    //    Cenário B = seguir a hipótese (nova carreira / cidade / ambos)
+    //    Premissas assumidas para o cálculo (projeto acadêmico):
+    //    - Custo de vida fixo ≈ 75% da renda atual (8% a mais em caso de mudança de cidade)
+    //    - Renda do Cenário A cresce 3% ao ano
+    //    - Renda do Cenário B começa em 85% da nova renda (fase de adaptação)
+    //      e cresce 8% ao ano (crescimento de carreira mais acelerado)
+    //    - O saldo acumulado rende juros mensais conforme a tolerância a risco
+    // ---------------------------------------------------------------
+    function simular(d) {
+      const prazoAnos = parseInt(d['prazo']) || 5;
+      const meses = prazoAnos * 12;
+
+      const rendaAtual = parseFloat(d['renda-atual']) || 0;
+      const reserva = parseFloat(d['reserva']) || 0;
+      const novaRenda = parseFloat(d['nova-renda']) || rendaAtual * 1.2;
+      const custoTransicao = parseFloat(d['custo-transicao']) || 0;
+      const risco = d['risco'] || 'conservador';
+      const tipoMudanca = d['tipo-mudanca'] || 'carreira';
+
+      const taxasRisco = { conservador: 0.005, moderado: 0.007, arrojado: 0.010 }; // taxa de juros mensal
+      const taxaJuros = taxasRisco[risco] ?? 0.005;
+
+      const custoVidaA = rendaAtual * 0.75;
+      // se houver mudança de cidade, assumimos custo de vida 8% maior no novo cenário
+      const custoVidaB = (tipoMudanca === 'cidade' || tipoMudanca === 'ambos')
+        ? custoVidaA * 1.08
+        : custoVidaA;
+
+      const crescimentoMensalA = Math.pow(1.03, 1 / 12);
+      const crescimentoMensalB = Math.pow(1.08, 1 / 12);
+
+      let rendaA = rendaAtual;
+      let rendaB = novaRenda * 0.85;
+      let patA = reserva;
+      let patB = reserva - custoTransicao;
+
+      let breakevenMes = null;
+      const anos = [{ label: 'Ano 0', patA, patB }];
+      let sobraAnualB = 0;
+      let rendaFimAnoB = rendaB;
+      let custoFimAnoB = custoVidaB;
+
+      for (let m = 1; m <= meses; m++) {
+        rendaA *= crescimentoMensalA;
+        rendaB *= crescimentoMensalB;
+
+        const sobraA = rendaA - custoVidaA;
+        const sobraB = rendaB - custoVidaB;
+
+        patA = patA * (1 + taxaJuros) + sobraA;
+        patB = patB * (1 + taxaJuros) + sobraB;
+
+        sobraAnualB += sobraB;
+        rendaFimAnoB = rendaB;
+        custoFimAnoB = custoVidaB;
+
+        if (breakevenMes === null && patB >= patA) breakevenMes = m;
+
+        if (m % 12 === 0) {
+          anos.push({
+            label: `Ano ${m / 12}`,
+            patA, patB,
+            rendaB: rendaFimAnoB,
+            custoB: custoFimAnoB,
+            sobraB: sobraAnualB
+          });
+          sobraAnualB = 0;
+        }
+      }
+
+      const ultimoAno = anos[anos.length - 1];
+
+      return {
+        prazoAnos,
+        custoTransicao,
+        breakevenMes,
+        ganhoLiquido: ultimoAno.patB - ultimoAno.patA,
+        patrimonioFinalB: ultimoAno.patB,
+        anos
+      };
+    }
+
+    function formatarBRL(valor) {
+      return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    const resultado = simular(dados);
+
+    // ---------------------------------------------------------------
+    // 3) PREENCHER O RESUMO EXECUTIVO E OS CARDS
+    // ---------------------------------------------------------------
+    document.getElementById('nome-projeto-out').textContent = dados['nome-projeto'] || 'Simulação Life-Branch';
+    document.getElementById('card-investimento').textContent = formatarBRL(resultado.custoTransicao);
+    document.getElementById('card-breakeven').textContent = resultado.breakevenMes
+      ? `Mês ${resultado.breakevenMes}`
+      : 'Não atingido no período';
+    document.getElementById('card-ganho').textContent = formatarBRL(resultado.ganhoLiquido);
+    document.getElementById('card-patrimonio').textContent = formatarBRL(resultado.patrimonioFinalB);
+
+    document.getElementById('titulo-grafico').textContent =
+      `Evolução Patrimonial Acumulada (${resultado.prazoAnos} Anos)`;
+    document.getElementById('titulo-tabela').textContent =
+      `Projeção Ano a Ano (Cenário B - Novo Cenário)`;
+
+    // ---------------------------------------------------------------
+    // 4) PREENCHER A TABELA ANO A ANO (usando os dados do Cenário B)
+    // ---------------------------------------------------------------
+    const corpoTabela = document.getElementById('tabela-corpo');
+    resultado.anos.slice(1).forEach((ano, index) => {
+      const tr = document.createElement('tr');
+      const isUltimo = index === resultado.anos.length - 2;
+      tr.innerHTML = `
+        <td><strong>${ano.label}</strong></td>
+        <td>${formatarBRL(ano.rendaB)}</td>
+        <td>${formatarBRL(ano.custoB)}</td>
+        <td>${formatarBRL(ano.sobraB)}</td>
+        <td>${formatarBRL(ano.sobraB)}</td>
+        <td>${isUltimo ? `<strong>${formatarBRL(ano.patB)}*</strong>` : formatarBRL(ano.patB)}</td>
+      `;
+      corpoTabela.appendChild(tr);
+    });
+
+    // ---------------------------------------------------------------
+    // 5) MONTAR O GRÁFICO COM OS DADOS CALCULADOS
+    // ---------------------------------------------------------------
+    const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const textColor = isDarkMode ? '#94a3b8' : '#64748b';
+    const gridColor = isDarkMode ? '#334155' : '#e2e8f0';
+
+    const labels = resultado.anos.map(a => a.label);
+    const dadosA = resultado.anos.map(a => Math.round(a.patA));
+    const dadosB = resultado.anos.map(a => Math.round(a.patB));
+
+    const ctx = document.getElementById('graficoPatrimonio').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: 'Cenário A: Manter Atual',
+            data: dadosA,
+            borderColor: '#94a3b8',
+            borderWidth: 2,
+            fill: false,
+            tension: 0.2
+          },
+          {
+            label: 'Cenário B: Novo Cenário',
+            data: dadosB,
+            borderColor: '#10b981',
+            borderWidth: 3,
+            fill: false,
+            tension: 0.2
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            labels: { color: textColor }
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: gridColor },
+            ticks: { color: textColor }
+          },
+          y: {
+            grid: { color: gridColor },
+            ticks: { color: textColor }
+          }
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>

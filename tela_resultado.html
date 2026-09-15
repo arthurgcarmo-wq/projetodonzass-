@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Life-Branch | Detalhamento dos Cálculos</title>
+  <link rel="stylesheet" href="tela_resultado.css">
+  <!-- Chart.js para renderização de gráficos em tempo real -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .grid-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .card {
+      background-color: #f8f9fa;
+      border-left: 4px solid #007bff;
+      padding: 15px;
+      border-radius: 4px;
+    }
+    .card h4 { margin: 0 0 5px 0; font-size: 0.9em; color: #555; }
+    .card p { margin: 0; font-size: 1.4em; font-weight: bold; color: #222; }
+    .chart-container {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      margin: 20px auto;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      background-color: #28a745;
+      color: white;
+      border-radius: 4px;
+      font-size: 0.85em;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="#">💰 Life-Branch</a>
+    <nav>
+      <!-- Link direto para a sua página original -->
+      <a href="relatorio_original.html">← Voltar ao Relatório Principal</a>
+    </nav>
+  </header>
+
+  <hr>
+
+  <main>
+    <section id="resumo-executivo">
+      <h1>Detalhamento Matemático e Financeiro</h1>
+      <p><strong>Projeto:</strong> Transição para TI vs. Cargo Atual</p>
+      <p><strong>Status da Simulação:</strong> <span class="badge">Processado com Sucesso</span></p>
+
+      <div class="grid-cards">
+        <div class="card">
+          <h4>Investimento de Transição</h4>
+          <p>R$ 5.000,00</p>
+        </div>
+        <div class="card">
+          <h4>Ponto de Equilíbrio (Breakeven)</h4>
+          <p>Mês 14</p>
+        </div>
+        <div class="card">
+          <h4>Ganho Líquido Adicional (5 Anos)</h4>
+          <p>R$ 132.000,00</p>
+        </div>
+        <div class="card">
+          <h4>Patrimônio Final Projetado</h4>
+          <p>R$ 62.500,00</p>
+        </div>
+      </div>
+    </section>
+
+    <hr>
+
+    <section id="grafico-projecao">
+      <h2>Evolução Patrimonial Acomulada (5 Anos)</h2>
+      <div class="chart-container">
+        <canvas id="graficoPatrimonio"></canvas>
+      </div>
+    </section>
+
+    <hr>
+
+    <section id="tabela-temporal">
+      <h2>Projeção Ano a Ano (Cenário B - Nova Carreira em TI)</h2>
+      
+      <table border="1" cellpadding="8" style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="background-color: #f1f1f1;">
+            <th>Período</th>
+            <th>Renda Mensal</th>
+            <th>Custo de Vida</th>
+            <th>Sobra Mensal</th>
+            <th>Acumulado Anual</th>
+            <th>Reserva de Emergência</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Ano 1 (Transição)</strong></td>
+            <td>R$ 3.800,00</td>
+            <td>R$ 3.400,00</td>
+            <td>R$ 400,00</td>
+            <td>R$ 4.800,00</td>
+            <td>R$ 5.000,00 (Aporte Inicial)</td>
+          </tr>
+          <tr>
+            <td><strong>Ano 2 (Júnior)</strong></td>
+            <td>R$ 4.500,00</td>
+            <td>R$ 3.400,00</td>
+            <td>R$ 1.100,00</td>
+            <td>R$ 13.200,00</td>
+            <td>R$ 18.200,00</td>
+          </tr>
+          <tr>
+            <td><strong>Ano 3 (Pleno I)</strong></td>
+            <td>R$ 5.200,00</td>
+            <td>R$ 3.400,00</td>
+            <td>R$ 1.800,00</td>
+            <td>R$ 21.600,00</td>
+            <td>R$ 39.800,00</td>
+          </tr>
+          <tr>
+            <td><strong>Ano 4 (Pleno II)</strong></td>
+            <td>R$ 5.800,00</td>
+            <td>R$ 3.400,00</td>
+            <td>R$ 2.400,00</td>
+            <td>R$ 28.800,00</td>
+            <td>R$ 68.600,00</td>
+          </tr>
+          <tr>
+            <td><strong>Ano 5 (Meta Atingida)</strong></td>
+            <td>R$ 6.500,00</td>
+            <td>R$ 3.400,00</td>
+            <td>R$ 3.100,00</td>
+            <td>R$ 37.200,00</td>
+            <td><strong>R$ 62.500,00*</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <p><small>* Descontados custos extras, impostos e reajustes de inflação ao longo do período.</small></p>
+    </section>
+
+    <hr>
+
+    <section id="acoes">
+      <div>
+        <!-- Botão para retornar à página do relatório original -->
+        <a href="relatorio_original.html"><button type="button">📋 Ver Relatório de Origem</button></a>
+        <button type="button" onclick="window.print()">🖨️ Imprimir Detalhamento</button>
+      </div>
+    </section>
+  </main>
+
+  <hr>
+
+  <footer>
+    <p>&copy; 2026 Senai-cetaf. Projeto Acadêmico de Desenvolvimento Web.</p>
+  </footer>
+
+  <script>
+    // Gerador do Gráfico Comparativo de Patrimônio
+    const ctx = document.getElementById('graficoPatrimonio').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Ano 0', 'Ano 1', 'Ano 2', 'Ano 3', 'Ano 4', 'Ano 5'],
+        datasets: [
+          {
+            label: 'Cenário A: Manter Atual',
+            data: [10000, 20800, 31600, 42400, 53200, 64000],
+            borderColor: '#6c757d',
+            fill: false,
+            tension: 0.1
+          },
+          {
+            label: 'Cenário B: Nova Carreira (TI)',
+            data: [5000, 9800, 23000, 44600, 73400, 105800],
+            borderColor: '#28a745',
+            fill: false,
+            tension: 0.1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'top' },
+          title: { display: true, text: 'Projeção Comparativa de Acumulação (R$)' }
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
